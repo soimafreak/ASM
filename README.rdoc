@@ -13,7 +13,7 @@ Although this could all be extended to be done via the one script we have taken 
 == Getting Started
 
 * Install Crack
-** gem install jnunemaker-crack -s http://gems.github.com
+  - gem install jnunemaker-crack -s http://gems.github.com
 * Create a "lib" directory in your nrpe lib directory
 * Drop the checks and Check_solr.rb in the nrpe lib directory 
 
