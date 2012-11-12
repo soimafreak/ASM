@@ -1,0 +1,23 @@
+= ASM
+
+== What is ASM
+ASM is Alfresco Solr Monitor, It takes information from the Summary report which is low impact and uses it to determin what the health of the system is.
+Currently it is designed to work with Nagios (Opsview) using the nrpe check script with the following options "-H $HOSTADDRESS$ -c check_solr_<check> -u -t 60"
+Although this could all be extended to be done via the one script we have taken the view point of creating one library and using that in different scripts, if time allowed we would convert everything over to ruby and come up with a better architecture but it is what it is :)
+
+== Things to be Done
+
+* Switch to full ruby
+* Centralise individual checks into one "check_solr.rb check_name"
+
+== Getting Started
+
+* Install Crack
+** gem install jnunemaker-crack -s http://gems.github.com
+* Create a "lib" directory in your nrpe lib directory
+* Drop the checks and Check_solr.rb in the nrpe lib directory 
+
+== Getting involved
+
+I don't mind how you get involved, If you just want to sit there logging enhancements in the issues[https://github.com/soimafreak/ASM/issues/new] section of github tht is more than enough. 
+The only way to make this better is by people having an opinion of what it should do. If you fancy writing code just fork and submit a pul request.
