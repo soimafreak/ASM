@@ -1,4 +1,3 @@
-#!/bin/bash
 #################################################################
 #
 #   ASM - Alfresco Solr Monitor
@@ -27,6 +26,7 @@
 #
 #################################################################
 
+#!/bin/bash
 critical=1000000000
 warning=700000000
 nodes=`/usr/local/nagios/libexec/nrpe_local/check_solr alfresco nodesinindex localhost`

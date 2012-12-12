@@ -1,4 +1,3 @@
-#!/usr/bin/ruby
 #################################################################
 #
 #   ASM - Alfresco Solr Monitor
@@ -27,6 +26,7 @@
 #
 #################################################################
 
+#!/usr/bin/ruby
 $:.unshift File.expand_path("../", __FILE__)
 require 'lib/solr_dao.rb'
 solr_results=SolrDAO.new("http://localhost:8080/solr/admin/cores?action=SUMMARY")

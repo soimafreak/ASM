@@ -1,4 +1,3 @@
-#!/bin/bash
 #################################################################
 #
 #   ASM - Alfresco Solr Monitor
@@ -27,6 +26,7 @@
 #
 #################################################################
 
+#!/bin/bash
 critical=2000
 warning=1000
 avg=`/usr/local/nagios/libexec/nrpe_local/check_solr alfresco aftsavg localhost`

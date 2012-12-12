@@ -27,7 +27,7 @@
 #################################################################
 
 #!/bin/bash
-warmup=`/usr/local/nagios/libexec/nrpe_local/check_solr alfresco filtercachewarmup localhost`
+warmup=`/usr/local/nagios/libexec/nrpe_local/check_solr alfresco queryresultcachewarmup localhost`
 critical=60000
 warning=30000
 if [ $(echo $warmup | grep -e "[0-9]") ]
@@ -36,18 +36,18 @@ then
   then
     if [ $warmup -ge $critical ]
     then
-      echo -e "CRITICAL :: FilterCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
+      echo -e "CRITICAL :: QueryResultCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
       exit 2
     else
-      echo -e "WARNING :: FilterCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
+      echo -e "WARNING :: QueryResultCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
       exit 1
     fi
   else
-    echo -e "OK :: FilterCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
+    echo -e "OK :: QueryResultCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
     exit 0
   fi
 else
-  echo -e "UNKNOWN :: FilterCache warmup is $warmup msecs"
+  echo -e "UNKNOWN :: QueryResultCache warmup is $warmup msecs"
   exit 3
 
 fi

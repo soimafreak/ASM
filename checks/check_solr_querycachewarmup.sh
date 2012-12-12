@@ -1,4 +1,3 @@
-#!/bin/bash
 #################################################################
 #
 #   ASM - Alfresco Solr Monitor
@@ -27,27 +26,28 @@
 #
 #################################################################
 
+#!/bin/bash
 warmup=`/usr/local/nagios/libexec/nrpe_local/check_solr alfresco querycachewarmup localhost`
-critical=60
-warning=30
+critical=60000
+warning=30000
 if [ $(echo $warmup | grep -e "[0-9]") ]
 then
   if [ $warmup -ge $warning ]
   then
     if [ $warmup -ge $critical ]
     then
-      echo -e "CRITICAL :: QueryCache warmup is $warmup secs|'warmup'=$warmup;$warning;$critical;;"
+      echo -e "CRITICAL :: QueryCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
       exit 2
     else
-      echo -e "WARNING :: QueryCache warmup is $warmup secs|'warmup'=$warmup;$warning;$critical;;"
+      echo -e "WARNING :: QueryCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
       exit 1
     fi
   else
-    echo -e "OK :: QueryCache warmup is $warmup secs|'warmup'=$warmup;$warning;$critical;;"
+    echo -e "OK :: QueryCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
     exit 0
   fi
 else
-  echo -e "UNKNOWN :: QueryCache warmup is $warmup secs"
+  echo -e "UNKNOWN :: QueryCache warmup is $warmup msecs"
   exit 3
 
 fi

@@ -1,4 +1,3 @@
-#!/usr/bin/ruby
 #################################################################
 #
 #   ASM - Alfresco Solr Monitor
@@ -27,9 +26,10 @@
 #
 #################################################################
 
+#!/usr/bin/ruby
 
 #
-# Check Solr is a wrapper to solr DAO
+# USAGE: 
 #
 $:.unshift File.expand_path("../", __FILE__)
 require 'lib/solr_dao.rb'
@@ -49,6 +49,10 @@ case check
     puts "#{solr_results.get_mean_doc_transformation_time(index)}"
   when "nodesinindex"
     puts "#{solr_results.get_alfresco_node_in_index(index)}"
+  when "approxchangesetsremaining"
+    puts "#{solr_results.get_approxChangeSetsRemaining(index)}"
+  when "approxtransactionsremaining"
+    puts "#{solr_results.get_approxTransactionsRemaining(index)}"
   when "aftsavg"
     puts "#{solr_results.get_afts_avgTimePerRequest(index)}"
   when "cmisavg"
@@ -57,4 +61,10 @@ case check
     puts "#{solr_results.get_queryResultCache_warmupTime(index)}"
   when "filtercachewarmup"
     puts "#{solr_results.get_filterCache_warmupTime(index)}"
+  when "queryresultcachewarmup"
+    puts "#{solr_results.get_queryResultCache_warmupTime(index)}"
+  when "alfrescopathcachewarmup"
+    puts "#{solr_results.get_alfrescoPathCache_warmupTime(index)}"
+  when "alfrescoauthoritycachewarmup"
+    puts "#{solr_results.get_alfrescoAuthorityCache_warmupTime(index)}"
 end

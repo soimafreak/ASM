@@ -1,4 +1,3 @@
-#!/bin/bash
 #################################################################
 #
 #   ASM - Alfresco Solr Monitor
@@ -27,6 +26,7 @@
 #
 #################################################################
 
+#!/bin/bash
 critical=900
 warning=600
 lag=`/usr/local/nagios/libexec/nrpe_local/check_solr alfresco lag localhost`

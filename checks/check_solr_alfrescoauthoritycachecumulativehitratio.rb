@@ -30,31 +30,31 @@
 $:.unshift File.expand_path("../", __FILE__)
 require 'lib/solr_dao.rb'
 solr_results=SolrDAO.new("http://localhost:8080/solr/admin/cores?action=SUMMARY")
-hitratio=solr_results.get_filterCache_hitratio("alfresco").to_f
-lookups=solr_results.get_filterCache_lookups("alfresco").to_i
+cumulative_hitratio=solr_results.get_alfrescoAuthorityCache_cumulative_hitratio("alfresco").to_f
+cumulative_lookups=solr_results.get_alfrescoAuthorityCache_cumulative_lookups("alfresco").to_i
 #Hit ratio is an inverse, 1.0 is perfect 0.1 is crap, and can be ignored if there is less than 100 lookups
-inverse=(1.0-hitratio)
+inverse=(1.0-cumulative_hitratio)
 critical=0.8
 warning=0.7
 if (inverse.is_a? Float)
-  if ( lookups >= 100 )
+  if ( cumulative_lookups >= 100 )
     if ( inverse >= warning )
       if (inverse >= critical )
-        puts "CRITICAL :: FilterCache hitratio is #{hitratio}|'hitratio'=#{hitratio};#{warning};#{critical};;"
+        puts "CRITICAL :: AlfrescoAuthorityCache cumulative_hitratio is #{cumulative_hitratio}|'cumulative_hitratio'=#{cumulative_hitratio};#{warning};#{critical};;"
         exit 2
       else
-        puts "WARNING :: FilterCache hitratio is #{hitratio}|'hitratio'=#{hitratio};#{warning};#{critical};;"
+        puts "WARNING :: AlfrescoAuthorityCache cumulative_hitratio is #{cumulative_hitratio}|'cumulative_hitratio'=#{cumulative_hitratio};#{warning};#{critical};;"
         exit 1
       end
     else
-      puts "OK :: FilterCache hitratio is #{hitratio}|'hitratio'=#{hitratio};#{warning};#{critical};;"
+      puts "OK :: AlfrescoAuthorityCache cumulative_hitratio is #{cumulative_hitratio}|'cumulative_hitratio'=#{cumulative_hitratio};#{warning};#{critical};;"
       exit 0
     end
   else
-    puts "OK :: FilterCache hitratio is #{hitratio}|'hitratio'=#{hitratio};#{warning};#{critical};;"
+    puts "OK :: AlfrescoAuthorityCache cumulative_hitratio is #{cumulative_hitratio}|'cumulative_hitratio'=#{cumulative_hitratio};#{warning};#{critical};;"
     exit 0
   end
 else
-  puts "UNKNOWN :: FilterCache hitratio is #{hitratio}"
+  puts "UNKNOWN :: AlfrescoAuthorityCache cumulative_hitratio is #{cumulative_hitratio}"
   exit 3
 end

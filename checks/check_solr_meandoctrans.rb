@@ -1,4 +1,3 @@
-#!/usr/bin/ruby
 #################################################################
 #
 #   ASM - Alfresco Solr Monitor
@@ -27,6 +26,7 @@
 #
 #################################################################
 
+#!/usr/bin/ruby
 time=`/usr/local/nagios/libexec/nrpe_local/check_solr alfresco meandoctrans localhost`.to_f
 critical=0.9
 warning=0.5

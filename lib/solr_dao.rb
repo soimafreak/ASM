@@ -26,6 +26,7 @@
 #
 #################################################################
 
+
 #
 # Solr Metric gatherer
 # This should be roughtly in setp with the Metrics solr_dao
@@ -36,8 +37,23 @@ require 'open-uri'
 
 class SolrDAO
 
-  def initialize (url)
-    @solr_hash = get_metrics(url)
+  def initialize (url, result_file="/tmp/solr_results", cache_age="300")
+
+    #Cache the results for 5 mins
+    if File.exists?(result_file)
+      if (clearcache(result_file,cache_age))
+        #remove file
+        File.delete(result_file)
+        #Populate cached file
+        @solr_hash = load_cache(result_file,url)
+      else
+        #Just load it
+        @solr_hash=load_cache(result_file,url)
+      end
+    else
+      #No file so use cache
+      @solr_hash = load_cache(result_file,url)
+    end
   end
 
   def get_lag(index)
@@ -71,32 +87,72 @@ class SolrDAO
     return @solr_hash["Summary"][index]["Doc Transformation time (ms)"]["Mean"]
   end
 
+  def get_approxTransactionsRemaining(index)
+    return @solr_hash["Summary"][index]["Approx transactions remaining"]
+  end
+  
+  def get_approxChangeSetsRemaining(index)
+    return @solr_hash["Summary"][index]["Approx change sets remaining"]
+  end
+  
+  def get_queryResultCache_cumulative_lookups(index)
+    return @solr_hash["Summary"][index]["/queryResultCache"]["cumulative_lookups"]
+  end
+  
   def get_queryResultCache_lookups(index)
     return @solr_hash["Summary"][index]["/queryResultCache"]["lookups"]
+  end
+  
+  def get_queryResultCache_cumulative_hitratio(index)
+    return @solr_hash["Summary"][index]["/queryResultCache"]["cumulative_hitratio"]
   end
   
   def get_queryResultCache_hitratio(index)
     return @solr_hash["Summary"][index]["/queryResultCache"]["hitratio"]
   end
   
+  def get_filterCache_cumulative_lookups(index)
+    return @solr_hash["Summary"][index]["/filterCache"]["cumulative_lookups"]
+  end
+  
   def get_filterCache_lookups(index)
     return @solr_hash["Summary"][index]["/filterCache"]["lookups"]
+  end
+  
+  def get_filterCache_cumulative_hitratio(index)
+    return @solr_hash["Summary"][index]["/filterCache"]["cumulative_hitratio"]
   end
   
   def get_filterCache_hitratio(index)
     return @solr_hash["Summary"][index]["/filterCache"]["hitratio"]
   end
   
+  def get_alfrescoPathCache_cumulative_lookups(index)
+    return @solr_hash["Summary"][index]["/alfrescoPathCache"]["cumulative_lookups"]
+  end
+  
   def get_alfrescoPathCache_lookups(index)
     return @solr_hash["Summary"][index]["/alfrescoPathCache"]["lookups"]
+  end
+  
+  def get_alfrescoPathCache_cumulative_hitratio(index)
+    return @solr_hash["Summary"][index]["/alfrescoPathCache"]["cumulative_hitratio"]
   end
   
   def get_alfrescoPathCache_hitratio(index)
     return @solr_hash["Summary"][index]["/alfrescoPathCache"]["hitratio"]
   end
   
+  def get_alfrescoAuthorityCache_cumulative_lookups(index)
+    return @solr_hash["Summary"][index]["/alfrescoAuthorityCache"]["cumulative_lookups"]
+  end
+  
   def get_alfrescoAuthorityCache_lookups(index)
     return @solr_hash["Summary"][index]["/alfrescoAuthorityCache"]["lookups"]
+  end
+  
+  def get_alfrescoAuthorityCache_cumulative_hitratio(index)
+    return @solr_hash["Summary"][index]["/alfrescoAuthorityCache"]["cumulative_hitratio"]
   end
   
   def get_alfrescoAuthorityCache_hitratio(index)
@@ -123,14 +179,52 @@ class SolrDAO
   def get_metrics(url)
     url += "&wt=json"
     response = open(url).read
-    # Convert to hash
-    result_hash = {}
-    result_hash = Crack::JSON.parse(response)
     # if the hash has 'Error' as a key, we raise an error
-    if result_hash.has_key? 'Error'
-      raise "web service error"
-    end
-    return result_hash
+    return response
   end
+  
+  def load_cache(file,url)
+    if File.exists?(file)
+      if File.readable?(file)
+        if (File.size(file) >0)
+            json= File.read(file)
+            # Convert to hash
+            result_hash = {}
+            result_hash = Crack::JSON.parse(json)
+            #puts "Loading cache"
+            return result_hash
+        else
+          puts "file has no content"
+        end
+      else
+        puts "file is not readable: #{file}" 
+      end
+    else
+      #puts "Cache file old or non existant, creating a new one"
+      hash = Hash.new
+      hash = get_metrics(url)
+      f = File.new(file,"w")
+      f.write(hash)
+      f.close
+      json= File.read(file)
+      # Convert to hash
+      result_hash = {}
+      result_hash = Crack::JSON.parse(json)
+      return result_hash
+    end
+  end
+
+  def clearcache(file,cache_time)
+
+    file_time=File.mtime(file).to_i
+    cache_time=(Time.now - cache_time.to_i).to_i
+
+    if (cache_time >= file_time)
+      return true
+    else
+      return false
+    end
+  end
+
 
 end # End of class

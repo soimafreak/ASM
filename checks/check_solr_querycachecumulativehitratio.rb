@@ -26,29 +26,35 @@
 #
 #################################################################
 
-#!/bin/bash
-warmup=`/usr/local/nagios/libexec/nrpe_local/check_solr alfresco filtercachewarmup localhost`
-critical=60000
-warning=30000
-if [ $(echo $warmup | grep -e "[0-9]") ]
-then
-  if [ $warmup -ge $warning ]
-  then
-    if [ $warmup -ge $critical ]
-    then
-      echo -e "CRITICAL :: FilterCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
-      exit 2
+#!/usr/bin/ruby
+$:.unshift File.expand_path("../", __FILE__)
+require 'lib/solr_dao.rb'
+solr_results=SolrDAO.new("http://localhost:8080/solr/admin/cores?action=SUMMARY")
+cumulative_hitratio=solr_results.get_queryResultCache_cumulative_hitratio("alfresco").to_f
+cumulative_lookups=solr_results.get_queryResultCache_lookups("alfresco").to_i
+#Hit ratio is an inverse, 1.0 is perfect 0.1 is crap, and can be ignored if there is less than 100 lookups
+inverse=(1.0-cumulative_hitratio)
+critical=0.8
+warning=0.7
+if (inverse.is_a? Float)
+  if ( cumulative_lookups >= 100 )
+    if ( inverse >= warning )
+      if (inverse >= critical )
+        puts "CRITICAL :: QueryCache cumulative_hitratio is #{cumulative_hitratio}|'cumulative_hitratio'=#{cumulative_hitratio};#{warning};#{critical};;"
+        exit 2
+      else
+        puts "WARNING :: QueryCache cumulative_hitratio is #{cumulative_hitratio}|'cumulative_hitratio'=#{cumulative_hitratio};#{warning};#{critical};;"
+        exit 1
+      end
     else
-      echo -e "WARNING :: FilterCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
-      exit 1
-    fi
+      puts "OK :: QueryCache cumulative_hitratio is #{cumulative_hitratio}|'cumulative_hitratio'=#{cumulative_hitratio};#{warning};#{critical};;"
+      exit 0
+    end
   else
-    echo -e "OK :: FilterCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
+    puts "OK :: QueryCache cumulative_hitratio is #{cumulative_hitratio}|'cumulative_hitratio'=#{cumulative_hitratio};#{warning};#{critical};;"
     exit 0
-  fi
+  end
 else
-  echo -e "UNKNOWN :: FilterCache warmup is $warmup msecs"
+  puts "UNKNOWN :: QueryCache cumulative_hitratio is #{cumulative_hitratio}"
   exit 3
-
-fi
-exit $?
+end

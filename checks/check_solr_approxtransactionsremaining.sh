@@ -27,27 +27,27 @@
 #################################################################
 
 #!/bin/bash
-warmup=`/usr/local/nagios/libexec/nrpe_local/check_solr alfresco filtercachewarmup localhost`
-critical=60000
-warning=30000
-if [ $(echo $warmup | grep -e "[0-9]") ]
+count=`/usr/local/nagios/libexec/nrpe_local/check_solr alfresco approxtransactionsremaining localhost`
+critical=150
+warning=100
+if [ $(echo $count | grep -e "[0-9]") ]
 then
-  if [ $warmup -ge $warning ]
+  if [ $count -ge $warning ]
   then
-    if [ $warmup -ge $critical ]
+    if [ $count -ge $critical ]
     then
-      echo -e "CRITICAL :: FilterCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
+      echo -e "CRITICAL :: ApproxTransactionsRemaining count is $count |'count'=$count;$warning;$critical;;"
       exit 2
     else
-      echo -e "WARNING :: FilterCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
+      echo -e "WARNING :: ApproxTransactionsRemaining count is $count |'count'=$count;$warning;$critical;;"
       exit 1
     fi
   else
-    echo -e "OK :: FilterCache warmup is $warmup msecs|'warmup'=$warmup;$warning;$critical;;"
+    echo -e "OK :: ApproxTransactionsRemaining count is $count |'count'=$count;$warning;$critical;;"
     exit 0
   fi
 else
-  echo -e "UNKNOWN :: FilterCache warmup is $warmup msecs"
+  echo -e "UNKNOWN :: ApproxTransactionsRemaining count is $count"
   exit 3
 
 fi
