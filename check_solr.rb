@@ -1,3 +1,4 @@
+#!/usr/bin/ruby
 #################################################################
 #
 #   ASM - Alfresco Solr Monitor
@@ -26,10 +27,9 @@
 #
 #################################################################
 
-#!/usr/bin/ruby
 
 #
-# USAGE: 
+# Check Solr is a wrapper to solr DAO
 #
 $:.unshift File.expand_path("../", __FILE__)
 require 'lib/solr_dao.rb'

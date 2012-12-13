@@ -1,3 +1,4 @@
+#!/bin/bash
 #################################################################
 #
 #   ASM - Alfresco Solr Monitor
@@ -26,7 +27,6 @@
 #
 #################################################################
 
-#!/bin/bash
 count=`/usr/local/nagios/libexec/nrpe_local/check_solr alfresco approxchangesetsremaining localhost`
 critical=150
 warning=100

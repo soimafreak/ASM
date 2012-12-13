@@ -1,3 +1,4 @@
+#!/bin/bash
 #################################################################
 #
 #   ASM - Alfresco Solr Monitor
@@ -26,7 +27,6 @@
 #
 #################################################################
 
-#!/bin/bash
 warmup=`/usr/local/nagios/libexec/nrpe_local/check_solr alfresco alfrescopathcachewarmup localhost`
 critical=60000
 warning=30000
