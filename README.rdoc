@@ -12,10 +12,22 @@ Although this could all be extended to be done via the one script we have taken 
 
 == Getting Started
 
+=== Hardcore Sysadmin install notes
 * Install Crack
   - gem install jnunemaker-crack -s http://gems.github.com
 * Create a "lib" directory in your nrpe lib directory
 * Drop the checks and Check_solr.rb in the nrpe lib directory 
+
+=== RHEL based install
+
+1. Get the Repo
+- git clone 
+- curl -H "Authorization: token your_token" -L -o /tmp/ASM.tgz https://api.github.com/repos/soimafreak/ASM/tarball more info here[https://help.github.com/articles/downloading-files-from-the-command-line]
+-- Note: you can also use "-u 'user:pass'" if you so wish... I wouldn't.
+2. Extract the the files... tar -xzpvf /tmp/ASM.tgz -C /usr/local/nagios/libexec/nrpe_local/  --strip-components 1
+3. Modify your nrpe.cfg / add one to nrpe_local
+- /usr/local/nagios/etc/nrpe.cfg You'll need to add each check to this 
+4. Restart the agent
 
 == Getting involved
 
